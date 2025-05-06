@@ -31,19 +31,58 @@
     <section id="arduino">
       <h3>Arduino Project</h3>
     
-      <h4 id="arduino-part1">Part 1 – Getting Familiar with the Arduino Board</h4>
+      <h4 id="arduino-part1">Part 1 - Getting Familiar with the Arduino Board</h4>
         <p>I learned about how each pin functions by using the Arduino board manual and online resources.</p>
 
           <details>
             <summary><strong>Arduino Pins</strong></summary>
-              <p><strong>Digital Pins:</strong> Used for basic input/output. I tested blinking LEDs using pins 13 and 12.</p>
-              <p><strong>Analog Pins:</strong> Can read sensor data. I practiced using A0 with a temperature sensor.</p>
-              <p><strong>PWM Pins:</strong> Marked with "~", these allow analog-like output. I tried dimming an LED.</p>
+              <p><strong>Digital Pins:</strong> Used for basic input/output.</p>
+              <p><strong>Analog Pins:</strong> Can read sensor data.</p>
+              <p><strong>PWM Pins:</strong> Marked with "~", these allow analog-like output.</p>
               <p><strong>Power Pins:</strong> 3.3V, 5V, GND — used to power external components.</p>
+              <p><a href="https://www.arduino.cc/en/Tutorial/BuiltInExamples/Blink" target="_blank">(source)</a></p>
           </details>
     
-      <h4 id="arduino-part2">Part 2 - Reading Sensor Data</h4>
-      <p>Used analogRead to get input from a temperature sensor and display it on Serial Monitor.</p>
+      <h4 id="arduino-part2">Part 2 – Reading Sensor Data</h4>
+        <p>I practiced 3 simple Arduino sketches using analogRead.</p>
+          <details>
+            <summary><strong>Code 1: Testing Basic Code</strong></summary>
+              <p><strong>Setup:</strong> Connected a temperature sensor to A0.</p>
+              <pre><code>
+          void setup() {
+            Serial.begin(9600);
+          }
+          
+          void loop() {
+            int sensorValue = analogRead(A0);
+            Serial.println(sensorValue);
+            delay(1000);
+          }
+              </code></pre>
+          
+              <p><strong>Result:</strong> Serial Monitor printed values like 345, 346, etc., showing analog input.</p>
+              </details>
+            <details>
+            <summary><strong>Code 2: LED Based on Threshold</strong></summary>
+              <p><strong>Setup:</strong> Same sensor, LED connected to pin 13.</p>
+              <pre><code>
+          void setup() {
+            pinMode(13, OUTPUT);
+          }
+          
+          void loop() {
+            int value = analogRead(A0);
+            if (value > 500) {
+              digitalWrite(13, HIGH);
+            } else {
+              digitalWrite(13, LOW);
+            }
+          }
+              </code></pre>
+            <p><strong>Result:</strong> LED turns on when sensor value crosses 500.</p>
+            </details>
+          
+          <!-- Add Code 3 the same way -->
     
       <h4 id="arduino-part3">Part 3 - Output & Control</h4>
       <p>Added control logic to light up LEDs based on sensor thresholds.</p>
