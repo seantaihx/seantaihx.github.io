@@ -34,20 +34,130 @@
       <h4 id="arduino-part1">Part 1 - Getting Familiar with the Arduino Board</h4>
         <p>I learned about how each pin functions by using the Arduino board manual and online resources.</p>
 
-          <details>
+        <details>
             <summary><strong>Arduino Pins</strong></summary>
-              <p><strong>Digital Pins:</strong> Used for basic input/output.</p>
-              <p><strong>Analog Pins:</strong> Can read sensor data.</p>
-              <p><strong>PWM Pins:</strong> Marked with "~", these allow analog-like output.</p>
-              <p><strong>Power Pins:</strong> 3.3V, 5V, GND — used to power external components.</p>
-              <p><a href="https://www.arduino.cc/en/Tutorial/BuiltInExamples/Blink" target="_blank">(source)</a></p>
+              <p><strong>GND Pins:</strong> Complete the electrical circuit by providing a common ground.</p>
+              <details>
+                <summary><strong>Analog Section (A0–15)</strong></summary>
+                <p><strong>Description:</strong> These pins are used for reading analog input signals and converting them into digital values that the microcontroller can process.</p>
+              
+                <ul>
+                  <li><strong>Function:</strong> Read varying voltage levels from input devices (e.g. sensors, temp. sensors) between 0V and 5V.</li>
+                  <li><strong>Analog-to-Digital Conversion (ADC):</strong> 10-bit ADC converts input to a value between 0 and 1023 (0V = 0, 5V = 1023).</li>
+                  <li><strong>Analog input signals:</strong> Continuous signals with a range of values, unlike binary digital signals.</li>
+                </ul>
+              </details>
+
+              <br>
+
+              <p><strong>AREF pin (Analog Reference Pin):</strong> Used to set a custom reference voltage from ADC (Default: 5V = 1023). </p>
+              <p>We can adjust the voltage (typically 1.1V and 5V) by connecting a different voltage to AREF to improve accuracy.</p>
+              <p><strong>Example:</strong> If sensor outputs a maximum of 2.5V, we can set AREF to 2.5V.</p>
+              <p><strong>Setting AREF voltage too low would reduce the resolution significantly and might result in unusable or noisy data.</strong></p>
+
+              <br>
+
+              <p><strong>Digital Pins:</strong> Used for basic input/output of digital signals (HIGH = ON, LOW = OFF).</p>
+              <ul>
+                <li><strong>Pins (D22-53):</strong> Can be used as digital inputs and outputs.</li>
+                <li><strong>HIGH/LOW Logic:</strong> Output 5V when set to HIGH and 0V when set to LOW.</li>
+              </ul>
+              <p><strong>Digital pins can be utilized by code written in Arduino IDE to control the function of external components.</strong></p>
+
+              <br>
+
+              <p><strong>TX Pins (TX0-3):</strong> Used to transmit data from the Arduino to other devices. Each pin corresponds to a specific serial port: TX0 -> Serial, TX1 -> Serial1...</p>
+              <p><strong>RX Pins (RX0-3):</strong> Used to receive data from external devices into Arduino. Each pin corresponds to a specific serial port: RX0 -> Serial, RX1 -> Serial1...</p>
+              <p>When receiving data, it enters the Arduino through the appropriate RX pin, allowing microcontroller to process the data.</p>
+              <p>When sending data, it sends the data through appropriate TX pin, which can be connected to the RX pin of another device for communication.</p>
+              <p>All TX pins operate using the same communication protocol (UART), which means they transmit all the data in the same format (Start-bit, 8bits of data, Stop-bit).</p>
+              <p><strong>Bit-by_Bit Transmission:</strong> In serial communication, data is transmitted one bit after another.</p>
+              <p><strong>Start and Stop Bits:</strong> In asynchronous serial communication, each data packet typically starts with a start bit and ends with one or more stop bits. So receiving device know when to start and stop reading incoming data.</p>
+              <p><strong>Data Rate:</strong> Serial communication is characterized by its baud rate, which is the number of signal changes or symbols sent per second (Speed of data transmission).</p>
+
+              <br>
+
+              <p><strong>SDA Pin:</strong> SDA pin is the Serial Data used for I2C (Inter-Integrated Circuit) communication, responsible for carrying the data being transmitteed between the master device and one or more slave devices. <strong>SDA line is bidirectional.</strong></p>
+              <p><strong>SCL Pin:</strong> SCL pin is the Serial Clock Line for I2C, providing the clock signal that synchronizes the data transmission over the SDA line. The master device generates the clock signal on the SCL pin, which ensures that both the master and slave devices are <strong>synchronized</strong> in terms of timing during data exchange.<strong>Essential for coordinating when data bits are read from or written to the SDA line.</strong></p>
+
+              <br>
+
+              <p><strong>PWM Pins (Pin2-13):</strong> Marked with "~", these allow analog-like output.</p>
+              <details>
+                <summary><strong>Timer Comparison</strong></summary>
+                <table border="1" cellpadding="8" style="border-collapse: collapse; margin-top: 10px;">
+                  <tr>
+                    <th>Timer</th>
+                    <th>Bit Resolution</th>
+                    <th>Count Range</th>
+                    <th>Special Functions</th>
+                    <th>Description</th>
+                  </tr>
+                  <tr>
+                    <td>Timer 0</td>
+                    <td>8-bit</td>
+                    <td>0 to 255</td>
+                    <td>Basic timing, PWM</td>
+                    <td>Used for general-purpose timing and PWM.</td>
+                  </tr>
+                  <tr>
+                    <td>Timer 1</td>
+                    <td>16-bit</td>
+                    <td>0 to 65,535</td>
+                    <td>Input capture, output compare, high-resolution PWM</td>
+                    <td>High-resolution timing and precise PWM.</td>
+                  </tr>
+                  <tr>
+                    <td>Timer 2</td>
+                    <td>8-bit</td>
+                    <td>0 to 255</td>
+                    <td>Basic timing, PWM</td>
+                    <td>Similar to Timer 0, used for PWM generation.</td>
+                  </tr>
+                  <tr>
+                    <td>Timer 3</td>
+                    <td>16-bit</td>
+                    <td>0 to 65,535</td>
+                    <td>Input capture, output compare, high-resolution PWM</td>
+                    <td>Advanced timing and PWM capabilities.</td>
+                  </tr>
+                  <tr>
+                    <td>Timer 4</td>
+                    <td>16-bit</td>
+                    <td>0 to 65,535</td>
+                    <td>Input capture, output compare, high-resolution PWM</td>
+                    <td>Similar to Timer 3, provides high-resolution PWM.</td>
+                  </tr>
+                </table>
+              </details>
+
+              <br>
+
+              <p><strong>IOREF Pin:</strong> Provides the reference voltage for the board's input/output pins (typically 5V), letting external components know the board's <strong>logic voltage</strong>. This is important because different devices may operate at different logic levels (e.g. 3.3V or 5V), and the pin helps them adapt to the correct voltage.</p>
+              <p><strong>Logic Voltage:</strong> The voltage levels used to represent digital signals (1/0), where "high" is typically 5V and 'low' is 0V, ensuring safe communication and prevents potential damage from voltage mismatches.</p>
+
+              <br>
+
+              <p><strong>Vin Pin:</strong> Used to supply external power to Arduino Mega 2560. Can also connect a power source like battery or an external power adapter to this pin.
+
+              <br>
+              
+              <p><strong>3.3V Pin:</strong> Provides a regulated 3.3V output for powering components, or sensors that operate at lower voltages.</p>
+              <p><strong>5V Pin:</strong> Supplies a regulated 5V output to power external components or sensors that require 5V to operate. This pin is powered either through USB connection or via voltage regulator when the board is powered through the Vin Pin, providing a stable 5V, making it convenient for powering devices directly from the board without needing an additional power supply.</p>
+              <p>Some devices require lower voltage, so higher voltage might damage them.</p>
+
+              <br>
+
+              <p><strong>Reset Pin:></strong> Reset the microcontroller on the Arduino Mega 2560.</p>
           </details>
     
-      <h4 id="arduino-part2">Part 2 – Reading Sensor Data</h4>
+      <h4 id="arduino-part2">Part 2 - Testing Basic Code</h4>
         <p>I practiced 3 simple Arduino sketches using analogRead.</p>
           <details>
-            <summary><strong>Code 1: Testing Basic Code</strong></summary>
-              <p><strong>Setup:</strong> Connected a temperature sensor to A0.</p>
+            <summary><strong>Code 1: BMP 280 Sensor Test</strong></summary>
+              <p><strong>Summary:</strong> Sense surrounding temp. & Pressure
+              <p><strong>Setup:</strong> Connect the BMP 280 Sensor to the breadboard. Place the jumper wire into the breadboard slot next to the sensor's pin. Then, </p>
+              <p><strong>(Power)5V:</strong> VIN, <strong>(Power)GND:</strong> GND, <strong>(PWM)10:</strong> CS, <strong>(PWM)11:</strong> SDI, <strong>(PWM)12</strong> SDO, <strong>(PWM)13</strong> SCK.</p>
               <pre><code>
           void setup() {
             Serial.begin(9600);
@@ -63,7 +173,8 @@
               <p><strong>Result:</strong> Serial Monitor printed values like 345, 346, etc., showing analog input.</p>
               </details>
             <details>
-            <summary><strong>Code 2: LED Based on Threshold</strong></summary>
+
+            <summary><strong>Code 2: LED Backpack Counter Test</strong></summary>
               <p><strong>Setup:</strong> Same sensor, LED connected to pin 13.</p>
               <pre><code>
           void setup() {
@@ -82,11 +193,30 @@
             <p><strong>Result:</strong> LED turns on when sensor value crosses 500.</p>
             </details>
           
-          <!-- Add Code 3 the same way -->
+            <details>
+            <summary><strong>Code 3: GPS Module Test</strong></summary>
+              <p><strong>Setup:</strong></p>
+              <pre><code>
+
+              </code></pre>
+            <p><strong>Result:</strong> </p>
+            </details>
+
+            <details>
+            <summary><strong>Code 4: Pulse Generator Test</strong></summary>
+              <p><strong>Setup:</strong></p>
+              <pre><code>
+
+              </code></pre>
+            <p><strong>Result:</strong></p>
+            </details>
     
-      <h4 id="arduino-part3">Part 3 - Output & Control</h4>
+      <h4 id="arduino-part3">Part 3 - Examining Relationship Between Baud Rate and Accuracy</h4>
       <p>Added control logic to light up LEDs based on sensor thresholds.</p>
     
+      <h4 id="arduino-part4">Part 4 - Measuring The Voltage</h4>
+      <p>...</p>
+      
       <h4>Reflection</h4>
       <p>This multi-part journey helped me understand hardware and C++ better...</p>
     </section>
