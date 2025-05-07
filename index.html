@@ -183,15 +183,15 @@
               <p><strong>Setup:</strong> Connect the BMP 280 Sensor to the breadboard. Place the jumper wire into the breadboard slot next to the sensor's pin. Then, </p>
               <p><strong>(Power)5V:</strong> VIN, <strong>(Power)GND:</strong> GND, <strong>(PWM)10:</strong> CS, <strong>(PWM)11:</strong> SDI, <strong>(PWM)12</strong> SDO, <strong>(PWM)13</strong> SCK.</p>
               <pre><code>
-          void setup() {
-            Serial.begin(9600);
-          }
+void setup() {
+  Serial.begin(9600);
+}
           
-          void loop() {
-            int sensorValue = analogRead(A0);
-            Serial.println(sensorValue);
-            delay(1000);
-          }
+void loop() {
+  int sensorValue = analogRead(A0);
+  Serial.println(sensorValue);
+  delay(1000);
+}
               </code></pre>
           
               <p><strong>Result:</strong> 19:36:09.167 -> Temperature = 22.46 *C <br/> 19:36:09.167 -> Pressure = 101981.96 Pa <br/> 19:36:09.199 -> Approx altitude = -54.55 m</p>
@@ -201,27 +201,26 @@
             <summary><strong>Code 2: LED Backpack Counter Test</strong></summary>
               <p><strong>Setup:</strong> Same sensor, LED connected to pin 13.</p>
               <pre><code>
-
-              #include <Wire.h>
-              #include <TimerOne.h> // Timer1 documentation: https://www.pjrc.com/teensy/td_libs_TimerOne.html
-              #include <Adafruit_LEDBackpack.h> // Search Arduino Library manager for "Adafruit LED Backpack Library“ for 7-segment LED.
+#include <Wire.h>
+#include <TimerOne.h> // Timer1 documentation: https://www.pjrc.com/teensy/td_libs_TimerOne.html
+#include <Adafruit_LEDBackpack.h> // Search Arduino Library manager for "Adafruit LED Backpack Library“ for 7-segment LED.
               
-              Adafruit_7segment matrix = Adafruit_7segment();
-              unsigned int timerCount = 0; // global variable needed to increment by one
-              void secondElapsed() {
-                timerCount++;
-                matrix.print(timerCount);
-              }
+Adafruit_7segment matrix = Adafruit_7segment();
+unsigned int timerCount = 0; // global variable needed to increment by one
+void secondElapsed() {
+  timerCount++;
+  matrix.print(timerCount);
+}
 
-              void setup() {
-                matrix.begin(0x70); // Creates a serial connection to 7-segment display with the address "0x70"
-                Timer1.initialize(1000000); // Initializes the timer to count every 1 000 000 microseconds i.e. one second
-                Timer1.attachInterrupt(secondElapsed); // Triggers interrupt every time timer counts
-              }
+void setup() {
+  matrix.begin(0x70); // Creates a serial connection to 7-segment display with the address "0x70"
+  Timer1.initialize(1000000); // Initializes the timer to count every 1 000 000 microseconds i.e. one second
+  Timer1.attachInterrupt(secondElapsed); // Triggers interrupt every time timer counts
+}
 
-              void loop() {
-                matrix.writeDisplay();
-              }
+void loop() {
+  matrix.writeDisplay();
+}
                   
               </code></pre>
             <p><strong>Result:</strong> LED turns on when sensor value crosses 500.</p>
@@ -232,47 +231,46 @@
               <p><strong>Setup:</strong></p>
               <pre><code>
 #define PPS_PIN 2 // The pin we're attaching to the PPS signal from the GPS unit
- volatile unsigned int overflows = 0;
- volatile unsigned int overflowsSincePPS = 0;
- volatile unsigned int lastTimer1 = 0;
- volatile bool recentPPS = false;
- ISR(TIMER1_OVF_vect) // This is called whenever Timer/Counter 1 overflows
-{
- overflows++; // Increases the "overflows" variable by 1
+volatile unsigned int overflows = 0;
+volatile unsigned int overflowsSincePPS = 0;
+volatile unsigned int lastTimer1 = 0;
+volatile bool recentPPS = false;
+ISR(TIMER1_OVF_vect) // This is called whenever Timer/Counter 1 overflows{
+  overflows++; // Increases the "overflows" variable by 1
 }
 void setup() {
- Serial.begin(115200);
- delay(1000);
- pinMode(PPS_PIN, INPUT);
- TCCR1A = 0; // Sets entire TCCR1A--Timer1 Control Register A--to 0
- TCCR1B = bit(CS10); // Turns on the Timer1 clock and sets it to increment every clock cycle 
- TCCR1C = 0; // Timer 1 Control Register C set to 0
- TCNT1 = 0; // Initialize timer/counter 1's value to 0
- TIMSK1 = bit(TOIE1); // Timer/Counter1's interrupt mask register; TOIE1 is the timer/Counter1 overflow interrupt enable
- Serial.println("Starting up...");
- attachInterrupt(digitalPinToInterrupt(PPS_PIN), PPSHandler, RISING);
+  Serial.begin(115200);
+  delay(1000);
+  pinMode(PPS_PIN, INPUT);
+  TCCR1A = 0; // Sets entire TCCR1A--Timer1 Control Register A--to 0
+  TCCR1B = bit(CS10); // Turns on the Timer1 clock and sets it to increment every clock cycle 
+  TCCR1C = 0; // Timer 1 Control Register C set to 0
+  TCNT1 = 0; // Initialize timer/counter 1's value to 0
+  TIMSK1 = bit(TOIE1); // Timer/Counter1's interrupt mask register; TOIE1 is the timer/Counter1 overflow interrupt enable
+  Serial.println("Starting up...");
+  attachInterrupt(digitalPinToInterrupt(PPS_PIN), PPSHandler, RISING);
 }
 void PPSHandler() { // Since this is an interrupt we should do as little as possible here. Serial writes take a lot of clock cycles, so we save that for the loop.
- lastTimer1 = TCNT1; 
- TCNT1 = 0; // Resets Timer1 Count
- overflowsSincePPS = overflows;
- overflows = 0;
- recentPPS = true;
+lastTimer1 = TCNT1; 
+TCNT1 = 0; // Resets Timer1 Count
+overflowsSincePPS = overflows;
+overflows = 0;
+recentPPS = true;
 }
 void loop(){
- if (recentPPS) {
-  noInterrupts();
-  uint32_t overflowsTemp = overflowsSincePPS;
-  uint32_t lastTimerTemp = lastTimer1;
-  interrupts();
-  Serial.print("Overflow:");
-  Serial.println(overflowsTemp);
-  Serial.print("Timer1:");
-  Serial.println(lastTimerTemp);
-  Serial.print("ClockCycles:");
-  Serial.println(overflowsTemp << 16 | lastTimerTemp); // Equivalent to overflowsTemp * 2^16 + lastTimerTemp
- recentPPS = false;
- }
+  if (recentPPS) {
+    noInterrupts();
+    uint32_t overflowsTemp = overflowsSincePPS;
+    uint32_t lastTimerTemp = lastTimer1;
+    interrupts();
+    Serial.print("Overflow:");
+    Serial.println(overflowsTemp);
+    Serial.print("Timer1:");
+    Serial.println(lastTimerTemp);
+    Serial.print("ClockCycles:");
+    Serial.println(overflowsTemp << 16 | lastTimerTemp); // Equivalent to overflowsTemp * 2^16 + lastTimerTemp
+    recentPPS = false;
+  }
 }
 
               </code></pre>
@@ -283,38 +281,37 @@ void loop(){
             <summary><strong>Code 4: Pulse Generator Test</strong></summary>
               <p><strong>Setup:</strong></p>
               <pre><code>
-                #include <SPI.h> // Allows you to communicate with SPI (Serial Peripheral Interface) devices, with the Arduino as the master device
-                  #include <Wire.h> // Enable this line if using Arduino Uno, Mega, etc.
-                  // Signal pins are given a name, Global variables
-                  #define triggerPin 2 // Trigger signal pin
-                  // Interrupt service routine
-                  // This function must be implemented, so that the TCNT1 counter counts
-                  ISR(TIMER1_OVF_vect)
-                  {
-                  }
-                  // All Arduino programs must contain a setup() and loop() functions
-                  void setup() {
-                  Serial.begin(115200); // Starts the serial monitor, sets baudrate to "115200" BPS
-                  pinMode(triggerPin,INPUT); // Sets the digital pin 2 as an input
-                  delay(1000); // Pauses the program for one second at the moment of open
-                  // Initializes the Timer1 registers (16-bit timer -- counts from 0 to 65535 ad nauseam). Timer interrupts/pauses the execution of the loop() function for a predefined number of seconds.
-                  // Timer1 is a 16-bit timer, so the timer will increase its value until it reaches its maximum count before reverting to 0. This enables the program to run a different set of commands. Once executed, the program resumes at the same position.
-                  TCCR1A = 0; // Sets entire TCCR1A--Timer1 Control Register A--to 0
-                  TCCR1B = 0; // Timer 1 Control Register B set to 0 (The physical address of timer1)
-                  TCCR1C = 0; // Timer 1 Control Register C set to 0
-                  TCNT1 = 0; // Initialize timer/counter 1's value to 0
-                  TIMSK1 = _BV(TOIE1); // Timer/Counter1's interrupt mask register; TOIE1 is the timer/Counter1 overflow interrupt enable
-                  TCCR1B = 1; // Timer 1 Control Register B set to 1
-                  attachInterrupt(digitalPinToInterrupt(triggerPin), Trigger, RISING); // Interrupts execution of the program when a trigger signal is received. The "Trigger" function is subsequently executed
-                  }
-                  void Trigger(){
-                  unsigned int temp = TCNT1; // Only positive integers are required
-                  Serial.print("TCNT1 value: ");
-                  Serial.println(temp); // Prints the value stored at temp
-                  }
-                  void loop() {
-                  // No lines are necessary here
-                  }
+#include <SPI.h> // Allows you to communicate with SPI (Serial Peripheral Interface) devices, with the Arduino as the master device
+#include <Wire.h> // Enable this line if using Arduino Uno, Mega, etc.
+// Signal pins are given a name, Global variables
+#define triggerPin 2 // Trigger signal pin
+// Interrupt service routine
+// This function must be implemented, so that the TCNT1 counter counts
+ISR(TIMER1_OVF_vect){
+}
+// All Arduino programs must contain a setup() and loop() functions
+void setup() {
+  Serial.begin(115200); // Starts the serial monitor, sets baudrate to "115200" BPS
+  pinMode(triggerPin,INPUT); // Sets the digital pin 2 as an input
+  delay(1000); // Pauses the program for one second at the moment of open
+  // Initializes the Timer1 registers (16-bit timer -- counts from 0 to 65535 ad nauseam). Timer interrupts/pauses the execution of the loop() function for a predefined number of seconds.
+  // Timer1 is a 16-bit timer, so the timer will increase its value until it reaches its maximum count before reverting to 0. This enables the program to run a different set of commands. Once executed, the program resumes at the same position.
+  TCCR1A = 0; // Sets entire TCCR1A--Timer1 Control Register A--to 0
+  TCCR1B = 0; // Timer 1 Control Register B set to 0 (The physical address of timer1)
+  TCCR1C = 0; // Timer 1 Control Register C set to 0
+  TCNT1 = 0; // Initialize timer/counter 1's value to 0
+  TIMSK1 = _BV(TOIE1); // Timer/Counter1's interrupt mask register; TOIE1 is the timer/Counter1 overflow interrupt enable
+  TCCR1B = 1; // Timer 1 Control Register B set to 1
+  attachInterrupt(digitalPinToInterrupt(triggerPin), Trigger, RISING); // Interrupts execution of the program when a trigger signal is received. The "Trigger" function is subsequently executed
+}
+void Trigger(){
+  unsigned int temp = TCNT1; // Only positive integers are required
+  Serial.print("TCNT1 value: ");
+  Serial.println(temp); // Prints the value stored at temp
+}
+void loop() {
+  // No lines are necessary here
+}
                              
               </code></pre>
             <p><strong>Result:</strong></p>
