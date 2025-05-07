@@ -119,55 +119,110 @@
         <p>I learned about how each pin functions by using the Arduino board manual and online resources.</p>
 
         <details>
-            <summary><strong>Arduino Pins</strong></summary>
-              <p><strong>GND Pins:</strong> Complete the electrical circuit by providing a common ground.</p>
-              <details>
-                <summary><strong>Analog Section (A0–15)</strong></summary>
-                <p><strong>Description:</strong> These pins are used for reading analog input signals and converting them into digital values that the microcontroller can process.</p>
-              
-                <ul>
-                  <li><strong>Function:</strong> Read varying voltage levels from input devices (e.g. sensors, temp. sensors) between 0V and 5V.</li>
-                  <li><strong>Analog-to-Digital Conversion (ADC):</strong> 10-bit ADC converts input to a value between 0 and 1023 (0V = 0, 5V = 1023).</li>
-                  <li><strong>Analog input signals:</strong> Continuous signals with a range of values, unlike binary digital signals.</li>
-                </ul>
-              </details>
-
-              <br>
-
-              <p><strong>AREF pin (Analog Reference Pin):</strong> Used to set a custom reference voltage from ADC (Default: 5V = 1023). </p>
-              <p>We can adjust the voltage (typically 1.1V and 5V) by connecting a different voltage to AREF to improve accuracy.</p>
-              <p><strong>Example:</strong> If sensor outputs a maximum of 2.5V, we can set AREF to 2.5V.</p>
-              <p><strong>Setting AREF voltage too low would reduce the resolution significantly and might result in unusable or noisy data.</strong></p>
-
-              <br>
-
-              <p><strong>Digital Pins:</strong> Used for basic input/output of digital signals (HIGH = ON, LOW = OFF).</p>
-              <ul>
-                <li><strong>Pins (D22-53):</strong> Can be used as digital inputs and outputs.</li>
-                <li><strong>HIGH/LOW Logic:</strong> Output 5V when set to HIGH and 0V when set to LOW.</li>
-              </ul>
-              <p><strong>Digital pins can be utilized by code written in Arduino IDE to control the function of external components.</strong></p>
-
-              <br>
-
-              <p><strong>TX Pins (TX0-3):</strong> Used to transmit data from the Arduino to other devices. Each pin corresponds to a specific serial port: TX0 -> Serial, TX1 -> Serial1...</p>
-              <p><strong>RX Pins (RX0-3):</strong> Used to receive data from external devices into Arduino. Each pin corresponds to a specific serial port: RX0 -> Serial, RX1 -> Serial1...</p>
-              <p>When receiving data, it enters the Arduino through the appropriate RX pin, allowing microcontroller to process the data.</p>
-              <p>When sending data, it sends the data through appropriate TX pin, which can be connected to the RX pin of another device for communication.</p>
-              <p>All TX pins operate using the same communication protocol (UART), which means they transmit all the data in the same format (Start-bit, 8bits of data, Stop-bit).</p>
-              <p><strong>Bit-by_Bit Transmission:</strong> In serial communication, data is transmitted one bit after another.</p>
-              <p><strong>Start and Stop Bits:</strong> In asynchronous serial communication, each data packet typically starts with a start bit and ends with one or more stop bits. So receiving device know when to start and stop reading incoming data.</p>
-              <p><strong>Data Rate:</strong> Serial communication is characterized by its baud rate, which is the number of signal changes or symbols sent per second (Speed of data transmission).</p>
-
-              <br>
-
-              <p><strong>SDA Pin:</strong> SDA pin is the Serial Data used for I2C (Inter-Integrated Circuit) communication, responsible for carrying the data being transmitteed between the master device and one or more slave devices. <strong>SDA line is bidirectional.</strong></p>
-              <p><strong>SCL Pin:</strong> SCL pin is the Serial Clock Line for I2C, providing the clock signal that synchronizes the data transmission over the SDA line. The master device generates the clock signal on the SCL pin, which ensures that both the master and slave devices are <strong>synchronized</strong> in terms of timing during data exchange.<strong>Essential for coordinating when data bits are read from or written to the SDA line.</strong></p>
-
-              <br>
-
-              <p><strong>PWM Pins (Pin2-13):</strong> Marked with "~", these allow analog-like output.</p>
-              <details>
+          <summary><strong>Arduino Pins</strong></summary>
+        
+          <p><strong>GND Pins:</strong> Provide a common ground to complete electrical circuits.</p>
+        
+          <details>
+            <summary><strong>Analog Section (A0-15)</strong></summary>
+            <p><strong>Description:</strong> These pins read analog signals and convert them into digital values.</p>
+            <ul>
+              <li><strong>Function:</strong> Reads varying voltages from sensors (0V-5V).</li>
+              <li><strong>ADC:</strong> 10-bit resolution converts 0V to 0 and 5V to 1023.</li>
+              <li><strong>Analog Signals:</strong> Continuous voltage values (unlike digital signals).</li>
+            </ul>
+          </details>
+        
+          <p><strong>AREF Pin (Analog Reference):</strong> Allows custom reference voltage for ADC (default 5V = 1023).</p>
+          <ul>
+            <li>Use a different voltage (e.g. 2.5V) for higher accuracy in low-voltage sensors.</li>
+            <li><strong>Warning:</strong> Too low a voltage may cause loss of resolution and noisy readings.</li>
+          </ul>
+        
+          <p><strong>Digital Pins (D22-53):</strong> For basic HIGH/LOW logic I/O control.</p>
+          <ul>
+            <li><strong>HIGH:</strong> 5V output</li>
+            <li><strong>LOW:</strong> 0V output</li>
+            <li>Used for controlling components like LEDs, buttons, and more.</li>
+          </ul>
+        
+          <p><strong>TX Pins (TX0-TX3):</strong> Transmit data (UART protocol)</p>
+          <p><strong>RX Pins (RX0-RX3):</strong> Receive data</p>
+          <ul>
+            <li>Each TX/RX pair maps to Serial, Serial1, Serial2, Serial3</li>
+            <li><strong>Protocol:</strong> UART (Start bit, 8 data bits, Stop bit)</li>
+            <li><strong>Bit-by-bit transmission</strong> with baud rate defining speed</li>
+          </ul>
+        
+          <p><strong>I2C Communication:</strong></p>
+          <ul>
+            <li><strong>SDA (Serial Data):</strong> Carries bidirectional data</li>
+            <li><strong>SCL (Serial Clock):</strong> Master-generated clock syncs data timing</li>
+          </ul>
+        
+          <p><strong>PWM Pins (Pin 2–13):</strong> Marked with "~", simulate analog output via PWM.</p>
+        
+          <details>
+            <summary><strong>Timer Comparison (PWM Support)</strong></summary>
+            <table border="1" cellpadding="8" style="border-collapse: collapse; margin-top: 10px;">
+              <tr>
+                <th>Timer</th>
+                <th>Bit Resolution</th>
+                <th>Count Range</th>
+                <th>Special Functions</th>
+                <th>Description</th>
+              </tr>
+              <tr>
+                <td>Timer 0</td>
+                <td>8-bit</td>
+                <td>0-255</td>
+                <td>Basic timing, PWM</td>
+                <td>General-purpose PWM and delay.</td>
+              </tr>
+              <tr>
+                <td>Timer 1</td>
+                <td>16-bit</td>
+                <td>0-65,535</td>
+                <td>High-resolution PWM, Input Capture</td>
+                <td>Precise timing and external pulse measurement.</td>
+              </tr>
+              <tr>
+                <td>Timer 2</td>
+                <td>8-bit</td>
+                <td>0-255</td>
+                <td>Basic timing, PWM</td>
+                <td>Similar to Timer 0.</td>
+              </tr>
+              <tr>
+                <td>Timer 3</td>
+                <td>16-bit</td>
+                <td>0-65,535</td>
+                <td>High-resolution PWM, Output Compare</td>
+                <td>Advanced timing and wave control.</td>
+              </tr>
+              <tr>
+                <td>Timer 4</td>
+                <td>16-bit</td>
+                <td>0-65,535</td>
+                <td>High-resolution PWM</td>
+                <td>Same capabilities as Timer 3.</td>
+              </tr>
+            </table>
+          </details>
+        
+          <p><strong>IOREF Pin:</strong> Tells connected devices what voltage (3.3V/5V) the board uses for logic.</p>
+        
+          <p><strong>Power Pins:</strong></p>
+          <ul>
+            <li><strong>Vin:</strong> Supply external voltage (battery, adapter)</li>
+            <li><strong>3.3V Pin:</strong> Outputs regulated 3.3V</li>
+            <li><strong>5V Pin:</strong> Outputs 5V from USB or regulator</li>
+            <li><strong>Use correct voltage:</strong> Overvoltage can damage components.</li>
+          </ul>
+        
+          <p><strong>Reset Pin:</strong> Restarts the microcontroller.</p>
+        
+        </details>
                 <summary><strong>Timer Comparison</strong></summary>
                 <table border="1" cellpadding="8" style="border-collapse: collapse; margin-top: 10px;">
                   <tr>
