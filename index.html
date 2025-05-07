@@ -137,40 +137,44 @@
                 </ul>
               </details>
 
-              <br>
+              <details>
+                <summary><strong>AREF Pin</strong></summary>
+                <p><strong>AREF pin (Analog Reference Pin):</strong> Used to set a custom reference voltage from ADC (Default: 5V = 1023). </p>
+                <p>We can adjust the voltage (typically 1.1V and 5V) by connecting a different voltage to AREF to improve accuracy.</p>
+                <p><strong>Example:</strong> If sensor outputs a maximum of 2.5V, we can set AREF to 2.5V.</p>
+                <p><strong>Setting AREF voltage too low would reduce the resolution significantly and might result in unusable or noisy data.</strong></p>
+              </details>
+              
+              <details>
+                <summary><strong>Digital Pins</strong></summary>
+                <p><strong>Digital Pins:</strong> Used for basic input/output of digital signals (HIGH = ON, LOW = OFF).</p>
+                <ul>
+                  <li><strong>Pins (D22-53):</strong> Can be used as digital inputs and outputs.</li>
+                  <li><strong>HIGH/LOW Logic:</strong> Output 5V when set to HIGH and 0V when set to LOW.</li>
+                </ul>
+                <p><strong>Digital pins can be utilized by code written in Arduino IDE to control the function of external components.</strong></p>
+              </details>
 
-              <p><strong>AREF pin (Analog Reference Pin):</strong> Used to set a custom reference voltage from ADC (Default: 5V = 1023). </p>
-              <p>We can adjust the voltage (typically 1.1V and 5V) by connecting a different voltage to AREF to improve accuracy.</p>
-              <p><strong>Example:</strong> If sensor outputs a maximum of 2.5V, we can set AREF to 2.5V.</p>
-              <p><strong>Setting AREF voltage too low would reduce the resolution significantly and might result in unusable or noisy data.</strong></p>
+              <details>
+                <summary><strong>TX/RX Pin</strong></summary>
+                <p><strong>TX Pins (TX0-3):</strong> Used to transmit data from the Arduino to other devices. Each pin corresponds to a specific serial port: TX0 -> Serial, TX1 -> Serial1...</p>
+                <p><strong>RX Pins (RX0-3):</strong> Used to receive data from external devices into Arduino. Each pin corresponds to a specific serial port: RX0 -> Serial, RX1 -> Serial1...</p>
+                <p>When receiving data, it enters the Arduino through the appropriate RX pin, allowing microcontroller to process the data.</p>
+                <p>When sending data, it sends the data through appropriate TX pin, which can be connected to the RX pin of another device for communication.</p>
+                <p>All TX pins operate using the same communication protocol (UART), which means they transmit all the data in the same format (Start-bit, 8bits of data, Stop-bit).</p>
+                <p><strong>Bit-by_Bit Transmission:</strong> In serial communication, data is transmitted one bit after another.</p>
+                <p><strong>Start and Stop Bits:</strong> In asynchronous serial communication, each data packet typically starts with a start bit and ends with one or more stop bits. So receiving device know when to start and stop reading incoming data.</p>
+                <p><strong>Data Rate:</strong> Serial communication is characterized by its baud rate, which is the number of signal changes or symbols sent per second (Speed of data transmission).</p>
+              </details> 
 
-              <br>
+              <details>
+              <summary><strong>SDA/SCL Pin</strong></summary>
+                <p><strong>SDA Pin:</strong> SDA pin is the Serial Data used for I2C (Inter-Integrated Circuit) communication, responsible for carrying the data being transmitteed between the master device and one or more slave devices. <strong>SDA line is bidirectional.</strong></p>
+                <p><strong>SCL Pin:</strong> SCL pin is the Serial Clock Line for I2C, providing the clock signal that synchronizes the data transmission over the SDA line. The master device generates the clock signal on the SCL pin, which ensures that both the master and slave devices are <strong>synchronized</strong> in terms of timing during data exchange.<strong>Essential for coordinating when data bits are read from or written to the SDA line.</strong></p>
+              </details>
 
-              <p><strong>Digital Pins:</strong> Used for basic input/output of digital signals (HIGH = ON, LOW = OFF).</p>
-              <ul>
-                <li><strong>Pins (D22-53):</strong> Can be used as digital inputs and outputs.</li>
-                <li><strong>HIGH/LOW Logic:</strong> Output 5V when set to HIGH and 0V when set to LOW.</li>
-              </ul>
-              <p><strong>Digital pins can be utilized by code written in Arduino IDE to control the function of external components.</strong></p>
-
-              <br>
-
-              <p><strong>TX Pins (TX0-3):</strong> Used to transmit data from the Arduino to other devices. Each pin corresponds to a specific serial port: TX0 -> Serial, TX1 -> Serial1...</p>
-              <p><strong>RX Pins (RX0-3):</strong> Used to receive data from external devices into Arduino. Each pin corresponds to a specific serial port: RX0 -> Serial, RX1 -> Serial1...</p>
-              <p>When receiving data, it enters the Arduino through the appropriate RX pin, allowing microcontroller to process the data.</p>
-              <p>When sending data, it sends the data through appropriate TX pin, which can be connected to the RX pin of another device for communication.</p>
-              <p>All TX pins operate using the same communication protocol (UART), which means they transmit all the data in the same format (Start-bit, 8bits of data, Stop-bit).</p>
-              <p><strong>Bit-by_Bit Transmission:</strong> In serial communication, data is transmitted one bit after another.</p>
-              <p><strong>Start and Stop Bits:</strong> In asynchronous serial communication, each data packet typically starts with a start bit and ends with one or more stop bits. So receiving device know when to start and stop reading incoming data.</p>
-              <p><strong>Data Rate:</strong> Serial communication is characterized by its baud rate, which is the number of signal changes or symbols sent per second (Speed of data transmission).</p>
-
-              <br>
-
-              <p><strong>SDA Pin:</strong> SDA pin is the Serial Data used for I2C (Inter-Integrated Circuit) communication, responsible for carrying the data being transmitteed between the master device and one or more slave devices. <strong>SDA line is bidirectional.</strong></p>
-              <p><strong>SCL Pin:</strong> SCL pin is the Serial Clock Line for I2C, providing the clock signal that synchronizes the data transmission over the SDA line. The master device generates the clock signal on the SCL pin, which ensures that both the master and slave devices are <strong>synchronized</strong> in terms of timing during data exchange.<strong>Essential for coordinating when data bits are read from or written to the SDA line.</strong></p>
-
-              <br>
-
+              <details>
+              <summary><strong>PWM Pins</strong></summary>
               <p><strong>PWM Pins (Pin2-13):</strong> Marked with "~", these allow analog-like output.</p>
               <details>
                 <summary><strong>Timer Comparison</strong></summary>
@@ -219,25 +223,26 @@
                   </tr>
                 </table>
               </details>
+              </details>
 
-              <br>
-
+              <details>
+              <summary><strong>IOREF Pin</strong></summary>
               <p><strong>IOREF Pin:</strong> Provides the reference voltage for the board's input/output pins (typically 5V), letting external components know the board's <strong>logic voltage</strong>. This is important because different devices may operate at different logic levels (e.g. 3.3V or 5V), and the pin helps them adapt to the correct voltage.</p>
               <p><strong>Logic Voltage:</strong> The voltage levels used to represent digital signals (1/0), where "high" is typically 5V and 'low' is 0V, ensuring safe communication and prevents potential damage from voltage mismatches.</p>
+              </details>
 
-              <br>
-
-              <p><strong>Vin Pin:</strong> Used to supply external power to Arduino Mega 2560. Can also connect a power source like battery or an external power adapter to this pin.
-
-              <br>
-              
+              <details>             
+              <summary><strong>Vin and two V Pins</strong></summary> 
+              <p><strong>Vin Pin:</strong> Used to supply external power to Arduino Mega 2560. Can also connect a power source like battery or an external power adapter to this pin.</p>
               <p><strong>3.3V Pin:</strong> Provides a regulated 3.3V output for powering components, or sensors that operate at lower voltages.</p>
               <p><strong>5V Pin:</strong> Supplies a regulated 5V output to power external components or sensors that require 5V to operate. This pin is powered either through USB connection or via voltage regulator when the board is powered through the Vin Pin, providing a stable 5V, making it convenient for powering devices directly from the board without needing an additional power supply.</p>
               <p>Some devices require lower voltage, so higher voltage might damage them.</p>
-
-              <br>
-
+              </details>
+              
+              <details>
+              <summary><strong>Reset Pin</strong></summary>
               <p><strong>Reset Pin:></strong> Reset the microcontroller on the Arduino Mega 2560.</p>
+              </details>
           </details>
     
       <h4 id="arduino-part2">Part 2 - Testing Basic Code</h4>
